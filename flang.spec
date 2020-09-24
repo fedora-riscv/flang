@@ -1,4 +1,4 @@
-%global rc_ver 2
+%global rc_ver 3
 %global baserelease 0.1
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
@@ -168,6 +168,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Sep 24 2020 sguelton@redhat.com - 11.0.0-0.1.rc3
+- 11.0.0-rc3 Release
+
 * Tue Sep 01 2020 sguelton@redhat.com - 11.0.0-0.1.rc2
 - Initial version.
 
