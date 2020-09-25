@@ -22,6 +22,8 @@ Patch0: token-sequence.patch
 Patch1: shared.patch
 # Needed for llvm-googletest compatibility
 Patch2: gtest.patch
+# Needed for documentation generation
+Patch3: sphinx_markdown_tables.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
@@ -44,6 +46,7 @@ BuildRequires: mlir-devel = %{version}
 BuildRequires: ninja-build
 BuildRequires: python3-lit
 BuildRequires: python3-sphinx
+BuildRequires: python3-recommonmark
 
 # For origin certification
 BuildRequires: gnupg2
