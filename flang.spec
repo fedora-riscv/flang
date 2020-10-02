@@ -1,5 +1,5 @@
-%global rc_ver 3
-%global baserelease 0.2
+%global rc_ver 5
+%global baserelease 0.3
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
 %global min_ver 0
@@ -171,6 +171,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Fri Oct 02 2020 sguelton@redhat.com - 11.0.0-0.3.rc5
+- 11.0.0-rc5 Release
+
 * Sun Sep 27 2020 sguelton@redhat.com - 11.0.0-0.2.rc3
 - Fix NVR
 
