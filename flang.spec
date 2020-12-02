@@ -1,9 +1,9 @@
-#%%global rc_ver 6
+%global rc_ver 1
 %global baserelease 1
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 1
 
 Name: flang
 Version: %{maj_ver}.%{min_ver}.%{patch_ver}
@@ -14,7 +14,7 @@ License: ASL 2.0 with exceptions
 URL:     https://github.com/llvm/llvm-project/tree/master/flang
 Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz
 Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz.sig
-Source2: https://prereleases.llvm.org/%{version}/hans-gpg-key.asc
+Source2: tstellar-gpg-key.asc
 
 # Otherwise fails when compiling with _GLIBCXX_DEBUG is defined.
 Patch0: token-sequence.patch
@@ -171,6 +171,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Dec 01 2020 sguelton@redhat.com - 11.0.1-1.rc1
+- llvm 11.0.1-rc1
+
 * Thu Oct 15 2020 sguelton@redhat.com - 11.0.0-1
 - Fix NVR
 
