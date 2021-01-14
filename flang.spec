@@ -1,13 +1,13 @@
-#%%global rc_ver 2
-%global baserelease 3
+%global rc_ver 1
+%global baserelease 1
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
-%global min_ver 0
-%global patch_ver 1
+%global min_ver 1
+%global patch_ver 0
 
 Name: flang
 Version: %{maj_ver}.%{min_ver}.%{patch_ver}
-Release: %{baserelease}%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Release: %{?rc_ver:0.}%{baserelease}%{?rc_ver:.rc%{rc_ver}}%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -171,6 +171,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Jan 14 2021 Serge Guelton - 11.1.0-0.1.rc1
+- 11.1.0-rc1 release
+
 * Wed Jan 06 2021 Serge Guelton - 11.0.1-3
 - LLVM 11.0.1 final
 
