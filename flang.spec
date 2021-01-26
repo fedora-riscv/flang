@@ -1,5 +1,5 @@
 %global rc_ver 1
-%global baserelease 1
+%global baserelease 2
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
 %global min_ver 1
@@ -171,6 +171,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 11.1.0-0.2.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Jan 14 2021 Serge Guelton - 11.1.0-0.1.rc1
 - 11.1.0-rc1 release
 
