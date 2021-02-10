@@ -1,0 +1,12 @@
+diff --git a/runtime/unit.cpp b/runtime/unit.cpp
+index cf20d7c..643d936 100644
+--- a/runtime/unit.cpp
++++ b/runtime/unit.cpp
+@@ -11,6 +11,7 @@
+ #include "lock.h"
+ #include "unit-map.h"
+ #include <cstdio>
++#include <limits>
+ 
+ namespace Fortran::runtime::io {
+ 
