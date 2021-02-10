@@ -1,5 +1,5 @@
 %global rc_ver 1
-%global baserelease 2
+%global baserelease 3
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 11
 %global min_ver 1
@@ -24,6 +24,7 @@ Patch1: shared.patch
 Patch2: gtest.patch
 # Needed for documentation generation
 Patch3: sphinx_markdown_tables.patch
+Patch4: %{name}-gcc11.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
@@ -171,6 +172,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Wed Feb 10 2021 Jeff Law <law@redhat.com> - 11.1.0-0.3.rc1
+- Fix missing #include for gcc-11
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 11.1.0-0.2.rc1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
