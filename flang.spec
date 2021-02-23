@@ -23,8 +23,9 @@ Patch2: 0001-flang-Fix-build-with-gcc-11.patch
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
 
-# Avoid gcc reaching 4GB of memory
-%ifarch %{ix86} s390x
+# Avoid gcc reaching 4GB of memory on 32-bit targets and also running out of
+# memory on builders with many CPUs.
+%ifarch %{ix86} s390x x86_64
 %global _lto_cflags %{nil}
 %global _smp_mflags -j1
 %endif
