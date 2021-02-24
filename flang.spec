@@ -1,5 +1,5 @@
-%global rc_ver 1
-%global baserelease 1
+%global rc_ver 2
+%global baserelease 2
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 12
 %global min_ver 0
@@ -170,6 +170,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Wed Feb 24 2021 sguelton@redhat.com - 12.0.0-0.2.rc2
+- 12.0.0-rc2 Release
+
 * Fri Feb 19 2021 Tom Stellard <tsellar@redhat.com> - 12.0.0-0.1.rc1
 - 12.0.0-rc1 Release
 
