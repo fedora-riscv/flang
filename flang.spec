@@ -17,8 +17,8 @@ Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{versio
 Source2: tstellar-gpg-key.asc
 
 # Needed for documentation generation
-Patch1: 0001-flang-Disable-use-of-sphinx_markdown_tables.patch
-Patch2: 0001-flang-Fix-build-with-gcc-11.patch
+Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
+Patch2: 0002-PATCH-flang-Fix-build-with-gcc-11.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl

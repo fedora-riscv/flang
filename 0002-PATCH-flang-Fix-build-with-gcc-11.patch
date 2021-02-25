@@ -1,14 +1,14 @@
-From 98ef88a707625d75101e7eae836ba2f4303da9c9 Mon Sep 17 00:00:00 2001
+From 1f00502316d003f36a87ab25f51e1fc2d3274a5b Mon Sep 17 00:00:00 2001
 From: Tom Stellard <tstellar@redhat.com>
 Date: Fri, 19 Feb 2021 19:46:12 -0800
-Subject: [PATCH] flang: Fix build with gcc 11
+Subject: [PATCH 2/2] [PATCH][flang] Fix build with gcc 11
 
 ---
  flang/runtime/unit.cpp | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/flang/runtime/unit.cpp b/flang/runtime/unit.cpp
-index 85d83ec50bd9..dbd4b6b79311 100644
+index 85d83ec..dbd4b6b 100644
 --- a/flang/runtime/unit.cpp
 +++ b/flang/runtime/unit.cpp
 @@ -12,6 +12,7 @@
@@ -20,5 +20,5 @@ index 85d83ec50bd9..dbd4b6b79311 100644
  
  namespace Fortran::runtime::io {
 -- 
-2.27.0
+1.8.3.1
 
