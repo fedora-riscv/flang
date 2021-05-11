@@ -1,13 +1,12 @@
-%global rc_ver 1
-%global baserelease 1
+#%%global rc_ver 5
 %global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 12
 %global min_ver 0
 %global patch_ver 0
 
 Name: flang
-Version: %{maj_ver}.%{min_ver}.%{patch_ver}
-Release: %{?rc_ver:0.}%{baserelease}%{?rc_ver:.rc%{rc_ver}}%{?dist}
+Version: %{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}
+Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -17,8 +16,8 @@ Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{versio
 Source2: tstellar-gpg-key.asc
 
 # Needed for documentation generation
-Patch1: 0001-flang-Disable-use-of-sphinx_markdown_tables.patch
-Patch2: 0001-flang-Fix-build-with-gcc-11.patch
+Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
+Patch2: 0002-PATCH-flang-Fix-build-with-gcc-11.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
@@ -170,6 +169,24 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Fri Apr 16 2021 Tom Stellard <tstellar@redhat.com> - 12.0.0-1
+- 12.0.0 Release
+
+* Thu Apr 08 2021 sguelton@redhat.com - 12.0.0-0.6.rc5
+- New upstream release candidate
+
+* Fri Apr 02 2021 sguelton@redhat.com - 12.0.0-0.5.rc4
+- New upstream release candidate
+
+* Thu Mar 11 2021 sguelton@redhat.com - 12.0.0-0.4.rc3
+- LLVM 12.0.0 rc3
+
+* Wed Mar 10 2021 sguelton@redhat.com - 12.0.0-0.3.rc2
+- rebuilt
+
+* Wed Feb 24 2021 sguelton@redhat.com - 12.0.0-0.2.rc2
+- 12.0.0-rc2 Release
+
 * Fri Feb 19 2021 Tom Stellard <tsellar@redhat.com> - 12.0.0-0.1.rc1
 - 12.0.0-rc1 Release
 
