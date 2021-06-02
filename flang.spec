@@ -1,18 +1,19 @@
-#%%global rc_ver 5
-%global flang_srcdir flang-%{version}%{?rc_ver:rc%{rc_ver}}.src
+%global rc_ver 1
+%global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
+%global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 12
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 1
 
 Name: flang
-Version: %{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:~rc%{rc_ver}}
+Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
 Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
 URL:     https://github.com/llvm/llvm-project/tree/master/flang
-Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz
-Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz.sig
+Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz
+Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz.sig
 Source2: tstellar-gpg-key.asc
 
 # Needed for documentation generation
@@ -24,7 +25,7 @@ ExcludeArch: armv7hl
 
 # Avoid gcc reaching 4GB of memory on 32-bit targets and also running out of
 # memory on builders with many CPUs.
-%ifarch %{ix86} s390x x86_64
+%ifarch %{ix86} s390x x86_64 ppc64le
 %global _lto_cflags %{nil}
 %global _smp_mflags -j1
 %endif
@@ -169,6 +170,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Jun 03 2021 Tom Stellard <tstellar@redhat.com> - 12.0.1~rc1-1
+- 12.0.1-rc1 Release
+
 * Fri Apr 16 2021 Tom Stellard <tstellar@redhat.com> - 12.0.0-1
 - 12.0.0 Release
 
