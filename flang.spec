@@ -1,13 +1,13 @@
-#global rc_ver 3
+%global rc_ver 1
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
-%global maj_ver 12
+%global maj_ver 13
 %global min_ver 0
-%global patch_ver 1
+%global patch_ver 0
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -18,7 +18,7 @@ Source2: tstellar-gpg-key.asc
 
 # Needed for documentation generation
 Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
-Patch2: 0002-PATCH-flang-Fix-build-with-gcc-11.patch
+Patch2: 0001-Link-against-libclang-cpp.so.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
@@ -43,6 +43,9 @@ BuildRequires: ninja-build
 BuildRequires: python3-lit >= 12.0.0
 BuildRequires: python3-sphinx
 BuildRequires: python3-recommonmark
+
+# The new flang drive requires clang-devel
+BuildRequires: clang-devel
 
 # For origin certification
 BuildRequires: gnupg2
@@ -76,6 +79,7 @@ Documentation for Flang
        -DMLIR_TABLEGEN_EXE=%{_bindir}/mlir-tblgen \
        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
        -DCMAKE_INSTALL_RPATH=";" \
+       -DCLANG_DIR=%{_libdir}/cmake/clang \
        -DLLVM_MAIN_SRC_DIR=%{_datadir}/llvm/src \
        -DBUILD_SHARED_LIBS:BOOL=ON \
        -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
@@ -95,7 +99,7 @@ Documentation for Flang
 
 # Avoid gcc reaching 4GB of memory
 %ifarch %{ix86} s390x
-sed -i -e 's/-g /-g1 /g' -e 's/-O2/-O1/g' %{_builddir}/%{flang_srcdir}/%{_build}/build.ninja
+sed -i -e 's/-g /-g1 /g' -e 's/-O2/-O1/g' %{__cmake_builddir}/build.ninja
 %endif
 
 export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
@@ -134,24 +138,30 @@ rm -f test/Semantics/data05.f90
 rm -f test/Semantics/offsets01.f90
 rm -f test/Semantics/offsets02.f90
 rm -f test/Semantics/typeinfo01.f90
+rm -f test/Semantics/spec-expr.f90
+rm -f test/Evaluate/folding19.f90
 %endif
 
 export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %cmake_build --target check-flang 
 
 %files
-%license LICENSE.txt
+%license LICENSE.TXT
 %{_bindir}/f18
 %{_bindir}/tco
 %{_bindir}/flang
-%{_libdir}/libFortranLower.so.%{maj_ver}
-%{_libdir}/libFIROptimizer.so.%{maj_ver}
-%{_libdir}/libFortranSemantics.so.%{maj_ver}
-%{_libdir}/libFortranCommon.so.%{maj_ver}
-%{_libdir}/libFortranRuntime.so.%{maj_ver}
-%{_libdir}/libFortranDecimal.so.%{maj_ver}
-%{_libdir}/libFortranEvaluate.so.%{maj_ver}
-%{_libdir}/libFortranParser.so.%{maj_ver}
+%{_bindir}/fir-opt
+%{_bindir}/flang-new
+%{_libdir}/libFortranLower.so.%{maj_ver}*
+%{_libdir}/libFIROptimizer.so.%{maj_ver}*
+%{_libdir}/libFortranSemantics.so.%{maj_ver}*
+%{_libdir}/libFortranCommon.so.%{maj_ver}*
+%{_libdir}/libFortranRuntime.so.%{maj_ver}*
+%{_libdir}/libFortranDecimal.so.%{maj_ver}*
+%{_libdir}/libFortranEvaluate.so.%{maj_ver}*
+%{_libdir}/libFortranParser.so.%{maj_ver}*
+%{_libdir}/libflangFrontend.so.%{maj_ver}*
+%{_libdir}/libflangFrontendTool.so.%{maj_ver}*
 
 %files devel
 %{_libdir}/libFortranLower.so
@@ -162,6 +172,8 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %{_libdir}/libFortranDecimal.so
 %{_libdir}/libFortranRuntime.so
 %{_libdir}/libFortranEvaluate.so
+%{_libdir}/libflangFrontend.so
+%{_libdir}/libflangFrontendTool.so
 %{_includedir}/flang
 %{_libdir}/cmake/
 
@@ -170,6 +182,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Mon Aug 09 2021 Tom Stellard <tstellar@redhat.com> - 13.0.1~rc1-1
+- 13.0.0-rc1 Release
+
 * Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 12.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
