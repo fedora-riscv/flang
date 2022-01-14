@@ -1,4 +1,4 @@
-%global rc_ver 1
+%global rc_ver 2
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 13
@@ -182,6 +182,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Fri Jan 14 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc2-1
+- Update to LLVM 13.0.1rc2
+
 * Wed Jan 12 2022 Nikita Popov <npopov@redhat.com> - 13.0.1~rc1-1
 - Update to LLVM 13.0.1rc1
 
