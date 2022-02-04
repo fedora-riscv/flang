@@ -1,0 +1,41 @@
+From e7d391111ec2ab540639b5dc3a60ea33661e7a7c Mon Sep 17 00:00:00 2001
+From: Nikita Popov <npopov@redhat.com>
+Date: Fri, 4 Feb 2022 11:52:16 +0100
+Subject: [PATCH] Work around gcc 12 crash while compiling
+ intrinsics-library.cpp
+
+This issue has already been fixed upstream by
+https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=501c4ee9fad68716497db4d96b63b801cc57b4a1
+but is not in the fedora rawhide build yet.
+
+Temporarily work around the issue by explicitly specifying the
+array size.
+---
+ flang/lib/Evaluate/intrinsics-library.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/flang/lib/Evaluate/intrinsics-library.cpp b/flang/lib/Evaluate/intrinsics-library.cpp
+index 1023590fd18e..ee42b5a2e8b1 100644
+--- a/flang/lib/Evaluate/intrinsics-library.cpp
++++ b/flang/lib/Evaluate/intrinsics-library.cpp
+@@ -207,7 +207,7 @@ struct HostRuntimeLibrary<HostT, LibraryVersion::Libm> {
+   using F = FuncPointer<HostT, HostT>;
+   using F2 = FuncPointer<HostT, HostT, HostT>;
+   using ComplexToRealF = FuncPointer<HostT, const std::complex<HostT> &>;
+-  static constexpr HostRuntimeFunction table[]{
++  static constexpr HostRuntimeFunction table[25]{
+       FolderFactory<ComplexToRealF, ComplexToRealF{std::abs}>::Create("abs"),
+       FolderFactory<F, F{std::acos}>::Create("acos"),
+       FolderFactory<F, F{std::acosh}>::Create("acosh"),
+@@ -257,7 +257,7 @@ struct HostRuntimeLibrary<std::complex<HostT>, LibraryVersion::Libm> {
+       const std::complex<HostT> &>;
+   using F2B = FuncPointer<std::complex<HostT>, const std::complex<HostT> &,
+       const HostT &>;
+-  static constexpr HostRuntimeFunction table[]{
++  static constexpr HostRuntimeFunction table[18]{
+       FolderFactory<F, F{std::acos}>::Create("acos"),
+       FolderFactory<F, F{std::acosh}>::Create("acosh"),
+       FolderFactory<F, F{std::asin}>::Create("asin"),
+--
+2.34.1
+

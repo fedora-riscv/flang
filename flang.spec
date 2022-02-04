@@ -19,6 +19,9 @@ Source2: tstellar-gpg-key.asc
 # Needed for documentation generation
 Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
 Patch2: 0001-Link-against-libclang-cpp.so.patch
+# Work around gcc crash. Can be dropped once gcc in fedora rawhide is
+# updated past https://gcc.gnu.org/r12-7010.
+Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
 
 # because mlir doesn't build on arm (yet)
 ExcludeArch: armv7hl
