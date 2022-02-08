@@ -7,7 +7,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -23,14 +23,16 @@ Patch2: 0001-Link-against-libclang-cpp.so.patch
 # updated past https://gcc.gnu.org/r12-7010.
 Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
 
-# because mlir doesn't build on arm (yet)
-ExcludeArch: armv7hl
-
 # Avoid gcc reaching 4GB of memory on 32-bit targets and also running out of
 # memory on builders with many CPUs.
-%ifarch %{ix86} s390x x86_64 ppc64le
+%ifarch %{ix86} s390x x86_64 ppc64le %{arm}
 %global _lto_cflags %{nil}
 %global _smp_mflags -j1
+%endif
+
+# We don't produce debug info on ARM to avoid OOM during the build.
+%ifarch %{arm}
+%global debug_package %{nil}
 %endif
 
 
@@ -104,6 +106,10 @@ Documentation for Flang
 %ifarch %{ix86} s390x
 sed -i -e 's/-g /-g1 /g' -e 's/-O2/-O1/g' %{__cmake_builddir}/build.ninja
 %endif
+# On ARM, disable debuginfo entirely to avoid OOM.
+%ifarch %{arm}
+sed -i -e 's/-g /-g0 /g' -e 's/-O2/-O1/g' %{__cmake_builddir}/build.ninja
+%endif
 
 export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %cmake_build
@@ -134,7 +140,8 @@ rm test/Semantics/resolve63.f90
 rm test/Evaluate/folding07.f90
 %endif
 
-%ifarch %{ix86}
+# These tests fail on 32-bit targets.
+%ifarch %{ix86} %{arm}
 rm -f test/Fir/fir-ops.fir
 rm -f test/Semantics/assign03.f90
 rm -f test/Semantics/data05.f90
@@ -185,6 +192,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Feb 08 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-2
+- Enable arm build, now that mlir supports arm
+
 * Thu Feb 03 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-1
 - Update to LLVM 13.0.1 final
 
