@@ -1,0 +1,65 @@
+diff -ruN a/flang-14.0.0rc1.src.orig/lib/Frontend/CMakeLists.txt a/flang-14.0.0rc1.src/lib/Frontend/CMakeLists.txt
+--- a/flang-14.0.0rc1.src.orig/lib/Frontend/CMakeLists.txt	2022-02-09 08:15:52.000000000 +0100
++++ a/flang-14.0.0rc1.src/lib/Frontend/CMakeLists.txt	2022-03-01 10:51:22.947132529 +0100
+@@ -9,7 +9,7 @@
+   TextDiagnostic.cpp
+ 
+   DEPENDS
+-  clangBasic
++  clang-cpp
+ 
+   LINK_LIBS
+   FortranParser
+@@ -17,8 +17,7 @@
+   FortranEvaluate
+   FortranCommon
+   FortranLower
+-  clangBasic
+-  clangDriver
++  clang-cpp
+ 
+   LINK_COMPONENTS
+   Option
+diff -ruN a/flang-14.0.0rc1.src.orig/lib/FrontendTool/CMakeLists.txt a/flang-14.0.0rc1.src/lib/FrontendTool/CMakeLists.txt
+--- a/flang-14.0.0rc1.src.orig/lib/FrontendTool/CMakeLists.txt	2022-02-09 08:15:52.000000000 +0100
++++ a/flang-14.0.0rc1.src/lib/FrontendTool/CMakeLists.txt	2022-03-01 11:00:03.624158204 +0100
+@@ -2,12 +2,11 @@
+   ExecuteCompilerInvocation.cpp
+ 
+   DEPENDS
+-  clangBasic
++  clang-cpp
+ 
+   LINK_LIBS
+   flangFrontend
+-  clangBasic
+-  clangDriver
++  clang-cpp
+ 
+   LINK_COMPONENTS
+   Option
+diff -ruN a/flang-14.0.0rc1.src.orig/tools/flang-driver/CMakeLists.txt a/flang-14.0.0rc1.src/tools/flang-driver/CMakeLists.txt
+--- a/flang-14.0.0rc1.src.orig/tools/flang-driver/CMakeLists.txt	2022-02-09 08:15:52.000000000 +0100
++++ a/flang-14.0.0rc1.src/tools/flang-driver/CMakeLists.txt	2022-03-01 10:51:22.948132535 +0100
+@@ -23,8 +23,7 @@
+ 
+ clang_target_link_libraries(flang-new
+   PRIVATE
+-  clangDriver
+-  clangBasic
++  clang-cpp
+ )
+ 
+ option(FLANG_PLUGIN_SUPPORT "Build Flang with plugin support." ON)
+diff -ruN a/flang-14.0.0rc1.src.orig/unittests/Frontend/CMakeLists.txt a/flang-14.0.0rc1.src/unittests/Frontend/CMakeLists.txt
+--- a/flang-14.0.0rc1.src.orig/unittests/Frontend/CMakeLists.txt	2022-02-09 08:15:52.000000000 +0100
++++ a/flang-14.0.0rc1.src/unittests/Frontend/CMakeLists.txt	2022-03-01 11:00:18.765248238 +0100
+@@ -5,7 +5,7 @@
+ 
+ target_link_libraries(FlangFrontendTests
+   PRIVATE
+-  clangBasic
++  clang-cpp
+   flangFrontend
+   flangFrontendTool
+   FortranParser

@@ -14,20 +14,19 @@ array size.
  flang/lib/Evaluate/intrinsics-library.cpp | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/flang/lib/Evaluate/intrinsics-library.cpp b/flang/lib/Evaluate/intrinsics-library.cpp
-index 1023590fd18e..ee42b5a2e8b1 100644
---- a/flang/lib/Evaluate/intrinsics-library.cpp
-+++ b/flang/lib/Evaluate/intrinsics-library.cpp
-@@ -207,7 +207,7 @@ struct HostRuntimeLibrary<HostT, LibraryVersion::Libm> {
+diff --git -ruN a/flang-14.0.0rc1.src.orig/lib/Evaluate/intrinsics-library.cpp b/flang-14.0.0rc1.src/lib/Evaluate/intrinsics-library.cpp
+--- a/flang-14.0.0rc1.src.orig/lib/Evaluate/intrinsics-library.cpp	2022-02-09 08:15:52.000000000 +0100
++++ b/flang-14.0.0rc1.src/lib/Evaluate/intrinsics-library.cpp	2022-02-28 10:36:55.652845443 +0100
+@@ -207,7 +207,7 @@
+ struct HostRuntimeLibrary<HostT, LibraryVersion::Libm> {
    using F = FuncPointer<HostT, HostT>;
    using F2 = FuncPointer<HostT, HostT, HostT>;
-   using ComplexToRealF = FuncPointer<HostT, const std::complex<HostT> &>;
 -  static constexpr HostRuntimeFunction table[]{
-+  static constexpr HostRuntimeFunction table[25]{
-       FolderFactory<ComplexToRealF, ComplexToRealF{std::abs}>::Create("abs"),
++  static constexpr HostRuntimeFunction table[22]{
        FolderFactory<F, F{std::acos}>::Create("acos"),
        FolderFactory<F, F{std::acosh}>::Create("acosh"),
-@@ -257,7 +257,7 @@ struct HostRuntimeLibrary<std::complex<HostT>, LibraryVersion::Libm> {
+       FolderFactory<F, F{std::asin}>::Create("asin"),
+@@ -254,7 +254,7 @@
        const std::complex<HostT> &>;
    using F2B = FuncPointer<std::complex<HostT>, const std::complex<HostT> &,
        const HostT &>;

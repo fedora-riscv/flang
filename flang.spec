@@ -1,13 +1,13 @@
-#global rc_ver 2
+%global maj_ver 14
+%global min_ver 0
+%global patch_ver 0
+#global rc_ver 1
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
-%global maj_ver 13
-%global min_ver 0
-%global patch_ver 1
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -18,7 +18,7 @@ Source2: tstellar-gpg-key.asc
 
 # Needed for documentation generation
 Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
-Patch2: 0001-Link-against-libclang-cpp.so.patch
+Patch2: link-against-libclang-cpp.patch
 # Work around gcc crash. Can be dropped once gcc in fedora rawhide is
 # updated past https://gcc.gnu.org/r12-7010.
 Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
@@ -50,7 +50,7 @@ BuildRequires: python3-sphinx
 BuildRequires: python3-recommonmark
 
 # The new flang drive requires clang-devel
-BuildRequires: clang-devel
+BuildRequires: clang-devel = %{version}
 
 # For origin certification
 BuildRequires: gnupg2
@@ -157,13 +157,12 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 
 %files
 %license LICENSE.TXT
-%{_bindir}/f18
 %{_bindir}/tco
+%{_bindir}/bbc
 %{_bindir}/flang
 %{_bindir}/fir-opt
 %{_bindir}/flang-new
 %{_libdir}/libFortranLower.so.%{maj_ver}*
-%{_libdir}/libFIROptimizer.so.%{maj_ver}*
 %{_libdir}/libFortranSemantics.so.%{maj_ver}*
 %{_libdir}/libFortranCommon.so.%{maj_ver}*
 %{_libdir}/libFortranRuntime.so.%{maj_ver}*
@@ -172,13 +171,23 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %{_libdir}/libFortranParser.so.%{maj_ver}*
 %{_libdir}/libflangFrontend.so.%{maj_ver}*
 %{_libdir}/libflangFrontendTool.so.%{maj_ver}*
+%{_libdir}/libFIRBuilder.so.%{maj_ver}
+%{_libdir}/libFIRCodeGen.so.%{maj_ver}
+%{_libdir}/libFIRDialect.so.%{maj_ver}
+%{_libdir}/libFIRSupport.so.%{maj_ver}
+%{_libdir}/libFIRTransforms.so.%{maj_ver}
+
 
 %files devel
 %{_libdir}/libFortranLower.so
 %{_libdir}/libFortranParser.so
 %{_libdir}/libFortranCommon.so
 %{_libdir}/libFortranSemantics.so
-%{_libdir}/libFIROptimizer.so
+%{_libdir}/libFIRBuilder.so
+%{_libdir}/libFIRCodeGen.so
+%{_libdir}/libFIRDialect.so
+%{_libdir}/libFIRSupport.so
+%{_libdir}/libFIRTransforms.so
 %{_libdir}/libFortranDecimal.so
 %{_libdir}/libFortranRuntime.so
 %{_libdir}/libFortranEvaluate.so
@@ -192,6 +201,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Mar 24 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.0-1
+- Update to 14.0.0
+
 * Tue Feb 08 2022 Nikita Popov <npopov@redhat.com> - 13.0.1-2
 - Enable arm build, now that mlir supports arm
 
