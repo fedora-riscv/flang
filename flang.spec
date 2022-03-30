@@ -35,6 +35,8 @@ Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
 %global debug_package %{nil}
 %endif
 
+# Link error on that target
+ExcludeArch: i686
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
