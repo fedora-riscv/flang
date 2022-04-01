@@ -7,7 +7,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -36,7 +36,7 @@ Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
 %endif
 
 # Link error on that target
-ExcludeArch: i686
+ExcludeArch: i686 %{arm}
 
 BuildRequires: gcc
 BuildRequires: gcc-c++
@@ -203,6 +203,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Fri Apr 01 2022 Tom Stellard <tstellar@redhat.com> - 14.0.0-2
+- Disable build on arm
+
 * Thu Mar 24 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.0-1
 - Update to 14.0.0
 
