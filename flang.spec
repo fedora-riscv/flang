@@ -1,6 +1,6 @@
 %global maj_ver 14
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 5
 #global rc_ver 1
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
@@ -203,6 +203,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Mon Jun 20 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.5-1
+- Update to 14.0.5
+
 * Thu Mar 24 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.0-1
 - Update to 14.0.0
 
