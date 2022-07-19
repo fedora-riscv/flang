@@ -11,7 +11,7 @@ Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
-URL:     https://github.com/llvm/llvm-project/tree/master/flang
+URL:     https://flang.llvm.org
 Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz
 Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz.sig
 Source2: tstellar-gpg-key.asc
