@@ -7,7 +7,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
@@ -203,6 +203,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 14.0.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Mon Jun 20 2022 Timm Bäder <tbaeder@redhat.com> - 14.0.5-1
 - Update to 14.0.5
 
