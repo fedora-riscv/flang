@@ -1,0 +1,78 @@
+From b13448c56cf4d918d54ce6af063bcaa5f23f2118 Mon Sep 17 00:00:00 2001
+From: Andrzej Warzynski <andrzej.warzynski@arm.com>
+Date: Tue, 26 Jul 2022 09:49:29 +0000
+Subject: [PATCH] [flang][docs][nfc] Refine FlangOptionsDocs.td
+
+Currently, FlangOptionsDocs.td doesn't specify `ExcludedFlags` which
+means that in the generated documentation file we expose flags that:
+  * we don't necessarily won't to advertise to our users (e.g. hidden flags), or
+  * are not supported altogether (e.g. CL options).
+This patch defines `ExcludeFlags` to fix that. The definition of
+`ExcludeFlags` was copied from Clang so that LLVM frontends have
+consistent documentation.
+
+It might be a bit counter-intuitive that IncludeFlags alone is not
+sufficient here. However, the current logic in ClangOptionDocEmitter.cpp
+will parse IncludeFlags and print all options that contains one of the
+included flags, as well as their aliases. So, for example, for -fopenmp
+(which is a supported Flang option), one would also get /fopenmp (i.e.
+CL mode equivalent for -fopenmp). By adding ExcludeFlags, we make sure
+that such aliases are excluded.
+
+I've also taken the liberty and moved FlangOptionsDocs.td. Originally it
+was located in Flang's "flang/include" directory, but there shouldn't be
+any implementation/documentation files there. Instead, I'm moving it to
+the "flang/docs" directory.
+
+Differential Revision: https://reviews.llvm.org/D130558
+---
+ flang/docs/CMakeLists.txt                         | 3 ++-
+ flang/{include/flang => docs}/FlangOptionsDocs.td | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+ rename flang/{include/flang => docs}/FlangOptionsDocs.td (85%)
+
+diff --git a/flang/docs/CMakeLists.txt b/flang/docs/CMakeLists.txt
+index b742be5e12f4..770343cd29b8 100644
+--- a/flang/docs/CMakeLists.txt
++++ b/flang/docs/CMakeLists.txt
+@@ -97,6 +97,7 @@ function (gen_rst_file_from_td output_file td_option source docs_target)
+   endif()
+   get_filename_component(TABLEGEN_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${source}" DIRECTORY)
+   list(APPEND LLVM_TABLEGEN_FLAGS "-I${TABLEGEN_INCLUDE_DIR}")
++  list(APPEND LLVM_TABLEGEN_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}/../../clang/include/clang/Driver/")
+   clang_tablegen(Source/${output_file} ${td_option} SOURCE ${source} TARGET "gen-${output_file}")
+   add_dependencies(${docs_target} "gen-${output_file}")
+ endfunction()
+@@ -126,7 +127,7 @@ if (LLVM_ENABLE_SPHINX)
+ 
+       # CLANG_TABLEGEN_EXE variable needs to be set for clang_tablegen to run without error
+       set(CLANG_TABLEGEN_EXE clang-tblgen)
+-      gen_rst_file_from_td(FlangCommandLineReference.rst -gen-opt-docs ../include/flang/FlangOptionsDocs.td docs-flang-html)
++      gen_rst_file_from_td(FlangCommandLineReference.rst -gen-opt-docs FlangOptionsDocs.td docs-flang-html)
+     endif()
+     if (${SPHINX_OUTPUT_MAN})
+       add_sphinx_target(man flang)
+diff --git a/flang/include/flang/FlangOptionsDocs.td b/flang/docs/FlangOptionsDocs.td
+similarity index 85%
+rename from flang/include/flang/FlangOptionsDocs.td
+rename to flang/docs/FlangOptionsDocs.td
+index 32054428ad3f..b251849e167f 100644
+--- a/flang/include/flang/FlangOptionsDocs.td
++++ b/flang/docs/FlangOptionsDocs.td
+@@ -26,10 +26,11 @@ Introduction
+ 
+   string Program = "flang";
+ 
+-  list<string> ExcludedFlags = [];
++  list<string> ExcludedFlags = ["HelpHidden", "NoDriverOption",
++                                "CLOption", "Unsupported", "Ignored"];
+   list<string> IncludedFlags = ["FlangOption"];
+ 
+ }
+ 
+ 
+-include "../../../clang/include/clang/Driver/Options.td"
++include "Options.td"
+-- 
+2.37.1
+

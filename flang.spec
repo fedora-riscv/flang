@@ -1,34 +1,37 @@
-%global maj_ver 14
+%global maj_ver 15
 %global min_ver 0
-%global patch_ver 5
-#global rc_ver 1
+%global patch_ver 0
+#global rc_ver 3
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: ASL 2.0 with exceptions
 URL:     https://flang.llvm.org
 Source0: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz
 Source1: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{flang_srcdir}.tar.xz.sig
-Source2: tstellar-gpg-key.asc
+Source2: release-keys.asc
+
+# flang depends on one internal clang tablegen file for documentation generation.
+Source3: https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/clang/include/clang/Driver/Options.td
 
 # Needed for documentation generation
 Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
 Patch2: link-against-libclang-cpp.patch
-# Work around gcc crash. Can be dropped once gcc in fedora rawhide is
-# updated past https://gcc.gnu.org/r12-7010.
-Patch3: 0001-Work-around-gcc-12-crash-while-compiling-intrinsics-.patch
+
+# TODO: Can be dropped for LLVM 16. The first one is a plain backport, and the second
+# one has been upstreamed as https://reviews.llvm.org/D131475.
+Patch3: 0001-flang-docs-nfc-Refine-FlangOptionsDocs.td.patch
+Patch4: 0001-Use-find_program-for-clang-tblgen.patch
 
 # Avoid gcc reaching 4GB of memory on 32-bit targets and also running out of
 # memory on builders with many CPUs.
-%ifarch %{ix86} s390x x86_64 ppc64le %{arm}
 %global _lto_cflags %{nil}
 %global _smp_mflags -j1
-%endif
 
 # We don't produce debug info on ARM to avoid OOM during the build.
 %ifarch %{arm}
@@ -80,6 +83,9 @@ Documentation for Flang
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %autosetup -n %{flang_srcdir} -p2
+# Copy Options.td for docs generation
+mkdir -p ../clang/include/clang/Driver
+cp %{SOURCE3} ../clang/include/clang/Driver
 
 %build
 %cmake -GNinja \
@@ -127,19 +133,19 @@ rm -f %{buildroot}%{_bindir}/f18-parse-demo
 install -d %{buildroot}%{_pkgdocdir}/html
 cp -r %{_vpath_builddir}/docs/html/* %{buildroot}%{_pkgdocdir}/html/
 
-chmod 0755 %{buildroot}%{_bindir}/flang
-
 %check
 
 # Assertion failure: lib/Semantics/canonicalize-acc.cpp:93
 # /usr/include/c++/11/optional:447: constexpr const _Tp& std::_Optional_base_impl<_Tp, _Dp>::_M_get() const [with _Tp = Fortran::parser::DoConstruct; _Dp = std::_Optional_base<Fortran::parser::DoConstruct, false, false>]: Assertion 'this->_M_is_engaged()' failed.
 rm test/Semantics/OpenACC/acc-canonicalization-validity.f90
 
-# these tests fail on all or specific arches
-rm test/Semantics/resolve63.f90
-
 %ifarch s390x
 rm test/Evaluate/folding07.f90
+rm test/Evaluate/fold-nearest.f90
+# s390x is not yet supported as a lowering target, so remove all related tests.
+rm -rf test/Driver/
+rm -rf test/Fir/
+rm -rf test/Lower/
 %endif
 
 # These tests fail on 32-bit targets.
@@ -161,7 +167,7 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %license LICENSE.TXT
 %{_bindir}/tco
 %{_bindir}/bbc
-%{_bindir}/flang
+%{_bindir}/flang-to-external-fc
 %{_bindir}/fir-opt
 %{_bindir}/flang-new
 %{_libdir}/libFortranLower.so.%{maj_ver}*
@@ -185,6 +191,7 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %{_libdir}/libFortranParser.so
 %{_libdir}/libFortranCommon.so
 %{_libdir}/libFortranSemantics.so
+%{_libdir}/libFortran_main.a
 %{_libdir}/libFIRBuilder.so
 %{_libdir}/libFIRCodeGen.so
 %{_libdir}/libFIRDialect.so
@@ -203,6 +210,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Sep 06 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-1
+- Update to LLVM 15.0.0
+
 * Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 14.0.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
