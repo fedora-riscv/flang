@@ -3,7 +3,7 @@
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global maj_ver 13
 %global min_ver 0
-%global patch_ver 0
+%global patch_ver 1
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
@@ -182,6 +182,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Wed Aug 03 2022 Tom Stellard <tstellar@redhat.com> - 13.0.1-1
+- 13.0.1 Release
+
 * Fri Oct 01 2021 Tom Stellard <tstellar@rehat.com> - 13.0.0-1
 - 13.0.0 Release
 
