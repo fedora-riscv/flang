@@ -7,7 +7,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: Apache-2.0 WITH LLVM-exception
@@ -112,7 +112,7 @@ cp %{SOURCE3} ../clang/include/clang/Driver
 
 # Avoid gcc reaching 4GB of memory
 %ifarch %{ix86} s390x
-sed -i -e 's/-g /-g1 /g' -e 's/-O2/-O1/g' %{__cmake_builddir}/build.ninja
+sed -i -e 's/-g /-g1 /g' %{__cmake_builddir}/build.ninja
 %endif
 # On ARM, disable debuginfo entirely to avoid OOM.
 %ifarch %{arm}
@@ -210,6 +210,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Sep 13 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-2
+- Build with -O2 on s390x
+
 * Tue Sep 06 2022 Nikita Popov <npopov@redhat.com> - 15.0.0-1
 - Update to LLVM 15.0.0
 
