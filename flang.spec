@@ -1,6 +1,6 @@
 %global maj_ver 15
 %global min_ver 0
-%global patch_ver 6
+%global patch_ver 7
 #global rc_ver 3
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
@@ -210,6 +210,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Fri Jan 13 2023 Nikita Popov <npopov@redhat.com> - 15.0.7-1
+- Update to LLVM 15.0.7
+
 * Tue Dec 06 2022 Nikita Popov <npopov@redhat.com> - 15.0.6-1
 - Update to LLVM 15.0.6
 
