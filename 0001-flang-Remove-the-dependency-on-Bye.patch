@@ -1,0 +1,47 @@
+From 11af57106d4b6a2db178d932f58bd3285d1eefc1 Mon Sep 17 00:00:00 2001
+From: Tulio Magno Quites Machado Filho <tuliom@redhat.com>
+Date: Wed, 22 Feb 2023 18:46:40 -0300
+Subject: [PATCH] [flang] Remove the dependency on Bye
+
+This plugin is not distributed on Fedora.
+---
+ flang/test/CMakeLists.txt                 | 4 ----
+ flang/test/Driver/frontend-forwarding.f90 | 2 --
+ 2 files changed, 6 deletions(-)
+
+diff --git a/flang/test/CMakeLists.txt b/flang/test/CMakeLists.txt
+index 3252ff37bd21..e059a970591c 100644
+--- a/flang/test/CMakeLists.txt
++++ b/flang/test/CMakeLists.txt
+@@ -64,10 +64,6 @@ set(FLANG_TEST_DEPENDS
+   Fortran_main
+   FortranDecimal
+ )
+-if (LLVM_ENABLE_PLUGINS AND NOT WIN32)
+-  list(APPEND FLANG_TEST_DEPENDS Bye)
+-endif()
+-
+ if (FLANG_INCLUDE_TESTS)
+   if (FLANG_GTEST_AVAIL)
+     list(APPEND FLANG_TEST_DEPENDS FlangUnitTests)
+diff --git a/flang/test/Driver/frontend-forwarding.f90 b/flang/test/Driver/frontend-forwarding.f90
+index beb2a85e76f5..819e45dabd91 100644
+--- a/flang/test/Driver/frontend-forwarding.f90
++++ b/flang/test/Driver/frontend-forwarding.f90
+@@ -14,7 +14,6 @@
+ ! RUN:     -fno-signed-zeros \
+ ! RUN:     -fassociative-math \
+ ! RUN:     -freciprocal-math \
+-! RUN:     -fpass-plugin=Bye%pluginext \
+ ! RUN:     -mllvm -print-before-all\
+ ! RUN:     -P \
+ ! RUN:   | FileCheck %s
+@@ -32,5 +31,4 @@
+ ! CHECK: "-mreassociate"
+ ! CHECK: "-freciprocal-math"
+ ! CHECK: "-fconvert=little-endian"
+-! CHECK: "-fpass-plugin=Bye
+ ! CHECK: "-mllvm" "-print-before-all"
+-- 
+2.39.1
+

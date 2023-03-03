@@ -1,0 +1,26 @@
+From 6772966dcdf5175c517832c1b2352b4fcd1d6b16 Mon Sep 17 00:00:00 2001
+From: Jay Foad <jay.foad@amd.com>
+Date: Thu, 26 Jan 2023 17:27:56 +0000
+Subject: [PATCH] [flang] Fix dereference of std::optional with no value
+
+Differential Revision: https://reviews.llvm.org/D142648
+---
+ flang/lib/Optimizer/Builder/Character.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/flang/lib/Optimizer/Builder/Character.cpp b/flang/lib/Optimizer/Builder/Character.cpp
+index de4a5579620d..aa455e768a08 100644
+--- a/flang/lib/Optimizer/Builder/Character.cpp
++++ b/flang/lib/Optimizer/Builder/Character.cpp
+@@ -422,7 +422,7 @@ void fir::factory::CharacterExprHelper::createAssign(
+       (lhsCstLen && rhsCstLen && *lhsCstLen == *rhsCstLen) ||
+       (rhs.getLen() == lhs.getLen());
+ 
+-  if (compileTimeSameLength && *lhsCstLen == 1) {
++  if (compileTimeSameLength && lhsCstLen && *lhsCstLen == 1) {
+     createLengthOneAssign(lhs, rhs);
+     return;
+   }
+-- 
+2.39.2
+

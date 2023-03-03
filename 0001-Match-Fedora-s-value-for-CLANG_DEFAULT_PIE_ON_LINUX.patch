@@ -1,0 +1,26 @@
+From fc7353c8ad082fd50d914eeedd1b328433a49d3e Mon Sep 17 00:00:00 2001
+From: Tulio Magno Quites Machado Filho <tuliom@redhat.com>
+Date: Wed, 1 Mar 2023 12:13:01 -0300
+Subject: [PATCH] Match Fedora's value for CLANG_DEFAULT_PIE_ON_LINUX
+
+Fedora uses CLANG_DEFAULT_PIE_ON_LINUX=OFF.
+---
+ flang/test/Driver/pic-flags.f90 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/flang/test/Driver/pic-flags.f90 b/flang/test/Driver/pic-flags.f90
+index fb6ab701c382..9edba769aefa 100644
+--- a/flang/test/Driver/pic-flags.f90
++++ b/flang/test/Driver/pic-flags.f90
+@@ -1,7 +1,7 @@
+ ! REQUIRES: aarch64-registered-target && x86-registered-target && arm-registered-target
+ ! RUN: %flang -v -S -emit-llvm -o - %s --target=aarch64-linux-gnu -fno-pie 2>&1 | FileCheck %s --check-prefixes=CHECK,CHECK-STATIC,CHECK-STATIC-IR
+ 
+-! RUN: %flang -v -S -emit-llvm -o - %s --target=aarch64-linux-gnu 2>&1 | FileCheck %s --check-prefixes=CHECK,CHECK-PIE-LEVEL2,CHECK-PIE-LEVEL2-IR
++! RUN: %flang -v -S -emit-llvm -o - %s --target=aarch64-linux-gnu 2>&1 | FileCheck %s --check-prefixes=CHECK,CHECK-STATIC,CHECK-STATIC-IR
+ ! RUN: %flang -v -S -emit-llvm -o - %s --target=aarch64-linux-gnu -fpie 2>&1 | FileCheck %s --check-prefixes=CHECK,CHECK-PIE-LEVEL1,CHECK-PIE-LEVEL1-IR
+ ! RUN: %flang -v -S -emit-llvm -o - %s --target=aarch64-linux-gnu -fPIE 2>&1 | FileCheck %s --check-prefixes=CHECK,CHECK-PIE-LEVEL2,CHECK-PIE-LEVEL2-IR
+ 
+-- 
+2.39.2
+
