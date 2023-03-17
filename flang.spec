@@ -1,7 +1,7 @@
 %global maj_ver 16
 %global min_ver 0
 %global patch_ver 0
-%global rc_ver 3
+%global rc_ver 4
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global cmake_srcdir cmake-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
@@ -12,7 +12,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: Apache-2.0 WITH LLVM-exception
@@ -246,6 +246,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Thu Mar 16 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.0~rc4-1
+- Update to LLVM 16.0.0 RC4
+
 * Tue Mar 14 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.0~rc3-2
 - Stop building on s390x
 
