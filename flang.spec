@@ -1,7 +1,7 @@
 %global maj_ver 16
 %global min_ver 0
 %global patch_ver 0
-%global rc_ver 4
+#global rc_ver 4
 %global flang_version %{maj_ver}.%{min_ver}.%{patch_ver}
 %global flang_srcdir flang-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
 %global cmake_srcdir cmake-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src
@@ -24,15 +24,12 @@ Source2: release-keys.asc
 # flang depends on one internal clang tablegen file for documentation generation.
 Source3: https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/clang/include/clang/Driver/Options.td
 
-Source4: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{cmake_srcdir}.tar.xz
-Source5: https://github.com/llvm/llvm-project/releases/download/llvmorg-%{flang_version}%{?rc_ver:-rc%{rc_ver}}/%{cmake_srcdir}.tar.xz.sig
-
-Source6: TestAliasAnalysis.h
+Source4: TestAliasAnalysis.h
 
 # Needed for documentation generation
 Patch1: 0001-PATCH-flang-Disable-use-of-sphinx_markdown_tables.patch
 
-Patch2: 0001-Changes-the-path-to-gtest.patch
+Patch2: 0001-Flang-Fix-CMakePolicy.cmake.patch
 
 # The Bye plugin is not distributed on Fedora.
 Patch3: 0001-flang-Remove-the-dependency-on-Bye.patch
@@ -42,6 +39,9 @@ Patch4: remove-clangBasic-dependency.diff
 
 # Fedora uses CLANG_DEFAULT_PIE_ON_LINUX=OFF.
 Patch5: 0001-Match-Fedora-s-value-for-CLANG_DEFAULT_PIE_ON_LINUX.patch
+
+# Fedora and RHEL use a different triple for ppc64le
+Patch6: 0001-PowerPC-Flang-Fix-triple.patch
 
 # Backports from LLVM 17:
 Patch20: 0001-flang-Fixed-restrictions-checking-for-OpenACC-loop-a.patch
@@ -74,6 +74,7 @@ BuildRequires: ninja-build
 BuildRequires: python3-lit >= 12.0.0
 BuildRequires: python3-sphinx
 BuildRequires: python3-recommonmark
+BuildRequires: doxygen
 
 # The new flang drive requires clang-devel
 BuildRequires: clang-devel = %{version}
@@ -103,19 +104,13 @@ Documentation for Flang
 
 %prep
 %{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE5}' --data='%{SOURCE4}'
-%setup -T -q -b 4 -n %{cmake_srcdir}
-# TODO: It would be more elegant to set -DLLVM_COMMON_CMAKE_UTILS=%{_builddir}/%{cmake_srcdir},
-# but this is not a CACHED variable, so we can't actually set it externally :(
-cd ..
-mv %{cmake_srcdir} cmake
 %autosetup -n %{flang_srcdir} -p2
 # Copy Options.td for docs generation
 mkdir -p ../clang/include/clang/Driver
 cp %{SOURCE3} ../clang/include/clang/Driver
 
 mkdir -p ../llvm-project-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src/mlir/test/lib/Analysis/
-cp %{SOURCE6} ../llvm-project-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src/mlir/test/lib/Analysis/
+cp %{SOURCE4} ../llvm-project-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src/mlir/test/lib/Analysis/
 
 %build
 %cmake -GNinja \
@@ -127,10 +122,10 @@ cp %{SOURCE6} ../llvm-project-%{flang_version}%{?rc_ver:rc%{rc_ver}}.src/mlir/te
        -DLLVM_MAIN_SRC_DIR=%{_datadir}/llvm/src \
        -DBUILD_SHARED_LIBS:BOOL=ON \
        -DLLVM_LINK_LLVM_DYLIB:BOOL=ON \
-       -DLLVM_ENABLE_ASSERTIONS:BOOL=ON \
        -DLLVM_EXTERNAL_LIT=%{_bindir}/lit \
-       -DLLVM_MAIN_SRC_DIR=%{_datadir}/llvm/src \
+       -DLLVM_THIRD_PARTY_DIR=%{_datadir}/llvm/src/utils \
        -DCMAKE_PREFIX_PATH=%{_libdir}/cmake/llvm/ \
+       -DLLVM_COMMON_CMAKE_UTILS=%{_libdir}/cmake/llvm/ \
 \
        -DFLANG_INCLUDE_DOCS:BOOL=ON \
        -DLLVM_ENABLE_SPHINX:BOOL=ON \
@@ -246,6 +241,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Tue Mar 21 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.0-1
+- Update to LLVM 16.0.0
+
 * Thu Mar 16 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.0~rc4-1
 - Update to LLVM 16.0.0 RC4
 

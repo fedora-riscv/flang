@@ -1,0 +1,26 @@
+From a17ee723f05887f291937750c81ea86422f7e4fd Mon Sep 17 00:00:00 2001
+From: Tulio Magno Quites Machado Filho <tuliom@redhat.com>
+Date: Thu, 23 Mar 2023 08:25:14 -0300
+Subject: [PATCH] [PowerPC][Flang] Fix triple
+
+Some Linux distributions use ppc64le instead of powerpc.
+---
+ flang/test/Driver/fast_math.f90 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/flang/test/Driver/fast_math.f90 b/flang/test/Driver/fast_math.f90
+index aadd7231b52b..8a63832e2259 100644
+--- a/flang/test/Driver/fast_math.f90
++++ b/flang/test/Driver/fast_math.f90
+@@ -58,7 +58,7 @@
+ 
+ ! Check that -ffast-math causes us to link to crtfastmath.o
+ ! UNSUPPORTED: system-windows
+-! UNSUPPORTED: target=powerpc{{.*}}
++! UNSUPPORTED: target={{(ppc|powerpc).*}}
+ ! RUN: %flang -ffast-math -### %s -o %t 2>&1 \
+ ! RUN:     | FileCheck --check-prefix=CHECK-CRT %s
+ ! CHECK-CRT: {{crtbegin.?\.o}}
+-- 
+2.39.2
+
