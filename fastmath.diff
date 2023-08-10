@@ -1,0 +1,15 @@
+diff --git a/flang/test/Driver/fast_math.f90 b/flang/test/Driver/fast_math.f90
+index aadd7231b52b..474be78bdb0f 100644
+--- a/flang/test/Driver/fast_math.f90
++++ b/flang/test/Driver/fast_math.f90
+@@ -69,9 +69,9 @@
+ ! Check that -ffast-math causes us to link to crtfastmath.o
+ ! UNSUPPORTED: system-windows
+ ! UNSUPPORTED: target=powerpc{{.*}}
++! REQUIRES:    target=x86{{.*}}
+ ! RUN: %flang -ffast-math -### %s -o %t 2>&1 \
+ ! RUN:           --target=x86_64-unknown-linux -no-pie --gcc-toolchain="" \
+-! RUN:           --sysroot=%S/../../../clang/test/Driver/Inputs/basic_linux_tree \
+ ! RUN:     | FileCheck --check-prefix=CHECK-CRT %s
+ ! CHECK-CRT: {{crtbegin.?\.o}}
+ ! CHECK-CRT-SAME: crtfastmath.o

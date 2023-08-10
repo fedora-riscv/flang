@@ -10,22 +10,21 @@ This plugin is not distributed on Fedora.
  2 files changed, 6 deletions(-)
 
 diff --git a/flang/test/CMakeLists.txt b/flang/test/CMakeLists.txt
-index 3252ff37bd21..e059a970591c 100644
+index 7d96a72e5f36..73a1f11b4533 100644
 --- a/flang/test/CMakeLists.txt
 +++ b/flang/test/CMakeLists.txt
-@@ -64,10 +64,6 @@ set(FLANG_TEST_DEPENDS
+@@ -65,9 +65,6 @@ set(FLANG_TEST_DEPENDS
    Fortran_main
    FortranDecimal
  )
 -if (LLVM_ENABLE_PLUGINS AND NOT WIN32)
 -  list(APPEND FLANG_TEST_DEPENDS Bye)
 -endif()
--
+ 
  if (FLANG_INCLUDE_TESTS)
    if (FLANG_GTEST_AVAIL)
-     list(APPEND FLANG_TEST_DEPENDS FlangUnitTests)
 diff --git a/flang/test/Driver/frontend-forwarding.f90 b/flang/test/Driver/frontend-forwarding.f90
-index beb2a85e76f5..819e45dabd91 100644
+index e953c957d2d0..38ad48f2b4bd 100644
 --- a/flang/test/Driver/frontend-forwarding.f90
 +++ b/flang/test/Driver/frontend-forwarding.f90
 @@ -14,7 +14,6 @@
@@ -33,14 +32,16 @@ index beb2a85e76f5..819e45dabd91 100644
  ! RUN:     -fassociative-math \
  ! RUN:     -freciprocal-math \
 -! RUN:     -fpass-plugin=Bye%pluginext \
- ! RUN:     -mllvm -print-before-all\
- ! RUN:     -P \
- ! RUN:   | FileCheck %s
-@@ -32,5 +31,4 @@
+ ! RUN:     -fversion-loops-for-stride \
+ ! RUN:     -flang-experimental-polymorphism \
+ ! RUN:     -mllvm -print-before-all \
+@@ -35,7 +34,6 @@
  ! CHECK: "-mreassociate"
  ! CHECK: "-freciprocal-math"
  ! CHECK: "-fconvert=little-endian"
 -! CHECK: "-fpass-plugin=Bye
+ ! CHECK: "-flang-experimental-polymorphism"
+ ! CHECK: "-fversion-loops-for-stride"
  ! CHECK: "-mllvm" "-print-before-all"
 -- 
 2.39.1

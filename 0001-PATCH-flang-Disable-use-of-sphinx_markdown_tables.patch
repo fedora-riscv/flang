@@ -8,18 +8,18 @@ Subject: [PATCH 1/2] [PATCH][flang] Disable use of sphinx_markdown_tables
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/flang/docs/conf.py b/flang/docs/conf.py
-index 7ad2915..da72db5 100644
+index 117cd1f1c97a..68cc85a78a64 100644
 --- a/flang/docs/conf.py
 +++ b/flang/docs/conf.py
-@@ -54,7 +54,7 @@ else:
-   else:
-     source_parsers = {'.md': CustomCommonMarkParser}
-   source_suffix['.md'] = 'markdown'
--  extensions.append('sphinx_markdown_tables')
-+  #extensions.append('sphinx_markdown_tables')
+@@ -55,7 +55,7 @@ else:
+     else:
+         source_parsers = {".md": CustomCommonMarkParser}
+     source_suffix[".md"] = "markdown"
+-    extensions.append("sphinx_markdown_tables")
++    #extensions.append("sphinx_markdown_tables")
  
-   # Setup AutoStructify for inline .rst toctrees in index.md
-   from recommonmark.transform import AutoStructify
+     # Setup AutoStructify for inline .rst toctrees in index.md
+     from recommonmark.transform import AutoStructify
 -- 
 1.8.3.1
 
