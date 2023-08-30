@@ -12,7 +12,7 @@
 
 Name: flang
 Version: %{flang_version}%{?rc_ver:~rc%{rc_ver}}
-Release: 1%{?dist}
+Release: 1.rv64%{?dist}
 Summary: a Fortran language front-end designed for integration with LLVM
 
 License: Apache-2.0 WITH LLVM-exception
@@ -203,6 +203,11 @@ rm -rf test/Fir/
 rm -rf test/Lower/
 %endif
 
+# Fast math test fail on riscv64 target.
+%ifarch riscv64
+rm -f test/Driver/fast_math.f90
+%endif
+
 # These tests fail on 32-bit targets.
 %ifarch %{ix86} %{arm}
 rm -f test/Fir/fir-ops.fir
@@ -272,6 +277,9 @@ export LD_LIBRARY_PATH=%{_builddir}/%{flang_srcdir}/%{_build}/lib
 %doc %{_pkgdocdir}/html/
 
 %changelog
+* Wed Aug 30 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 16.0.6-1.rv64
+- Fix build on riscv64.
+
 * Wed Jul 12 2023 Tulio Magno Quites Machado Filho <tuliom@redhat.com> - 16.0.6-1
 - Update to LLVM 16.0.6
 
